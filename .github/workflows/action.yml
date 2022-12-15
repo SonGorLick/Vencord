@@ -14,4 +14,4 @@ jobs:
         with: 
           upstream_repo: "https://github.com/Vendicated/Vencord.git"
           upstream_branch: "main"
-          token: ${{ secrets.WORKFLOW_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
