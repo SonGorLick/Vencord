@@ -16,14 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { app } from "electron";
 import { join } from "path";
 
-export const DATA_DIR = process.env.VENCORD_USER_DATA_DIR ?? (
-    process.env.DISCORD_USER_DATA_DIR
-        ? join(process.env.DISCORD_USER_DATA_DIR, "..", "VencordData")
-        : join(app.getPath("userData"), "..", "Vencord")
-);
+export const DATA_DIR = join(join(__dirname, ".."));
 export const SETTINGS_DIR = join(DATA_DIR, "settings");
 export const QUICKCSS_PATH = join(SETTINGS_DIR, "quickCss.css");
 export const SETTINGS_FILE = join(SETTINGS_DIR, "settings.json");
