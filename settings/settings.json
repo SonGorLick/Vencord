@@ -31,10 +31,12 @@
             "enabled": false
         },
         "BetterGifAltText": {
-            "enabled": false
+            "enabled": true
         },
         "BetterNotesBox": {
-            "enabled": false
+            "enabled": true,
+            "hide": true,
+            "noSpellCheck": false
         },
         "BetterRoleDot": {
             "enabled": false
@@ -50,7 +52,7 @@
             "format": "stopwatch"
         },
         "EmoteCloner": {
-            "enabled": false
+            "enabled": true
         },
         "Experiments": {
             "enabled": true,
@@ -75,11 +77,14 @@
             "enabled": false
         },
         "MessageLinkEmbeds": {
-            "enabled": true
+            "enabled": true,
+            "automodEmbeds": "never"
         },
         "MessageLogger": {
             "enabled": true,
-            "deleteStyle": "text"
+            "deleteStyle": "text",
+            "ignoreBots": false,
+            "ignoreSelf": false
         },
         "MuteNewGuild": {
             "enabled": false
@@ -216,7 +221,7 @@
             "enabled": false
         },
         "MessageClickActions": {
-            "enabled": false
+            "enabled": true
         },
         "MessageTags": {
             "enabled": false
