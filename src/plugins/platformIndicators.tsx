@@ -70,7 +70,15 @@ const PlatformIndicator = ({ user, style }: { user: User, style?: React.CSSPrope
     const sessions = SessionStore?.getSessions();
     if (!sessions) return null;
 
-    const ownStatus = Object.values(sessions).reduce((acc: any, curr: any) => {
+    const sortedSessions = Object.values(sessions).sort((a: any, b: any) => {
+        if (a.status === "online" && b.status !== "online") return 1;
+        if (a.status !== "online" && b.status === "online") return -1;
+        if (a.status === "idle" && b.status !== "idle") return 1;
+        if (a.status !== "idle" && b.status === "idle") return -1;
+        return 0;
+    });
+
+    const ownStatus = Object.values(sortedSessions).reduce((acc: any, curr: any) => {
         if (curr?.clientInfo?.client === "unknown") return {};
         acc[curr?.clientInfo?.client] = curr?.status;
         return acc;
