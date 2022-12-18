@@ -63,7 +63,7 @@ const PlatformIcon = ({ platform, status }: { platform: Platform, status: string
     return <Icon color={`var(--${getStatusColor(status)}`} tooltip={tooltip} />;
 };
 
-const PlatformIndicator = ({ user }: { user: User; }) => {
+const PlatformIndicator = ({ user, style }: { user: User, style?: React.CSSProperties; }) => {
     if (!user || user.bot) return null;
 
     const status = PresenceStore.getState()?.clientStatuses?.[user.id] as Record<Platform, string>;
@@ -83,7 +83,7 @@ const PlatformIndicator = ({ user }: { user: User; }) => {
         <div
             className="vc-platform-indicator"
             style={{
-                display: "flex", alignItems: "center", marginLeft: "4px", gap: "-8px"
+                ...style, display: "flex", alignItems: "center", marginLeft: "4px", gap: "-8px"
             }}
         >
             {icons}
@@ -138,7 +138,7 @@ export default definePlugin({
     ChatTimestampWrapper({ message }: { message: Message; }) {
         return (
             <span className={classes(styles.timestampInline, styles.timestamp, "vc-platform-indicator-chat")}>
-                <PlatformIndicator user={message.author} />
+                <PlatformIndicator user={message.author} style={{ position: "relative", top: "4.5px", marginLeft: "2px" }} />
             </span>
         );
     },
