@@ -6,7 +6,8 @@ on:
     - cron: "*/15 * * * *"
 
 jobs:
-  sync:
+  sync-main:
+    name: Sync Main Branch
     runs-on: ubuntu-latest
     steps:
       - name: GitHub Sync to Upstream Repository
@@ -14,4 +15,15 @@ jobs:
         with: 
           upstream_repo: "https://github.com/Vendicated/Vencord.git"
           upstream_branch: "main"
+          token: ${{ secrets.GITHUB_TOKEN }}
+  sync-main-vencord:
+    name: Sync Main-Vencord Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub Sync to Upstream Repository
+        uses: dabreadman/sync-upstream-repo@v1.3.0
+        with: 
+          upstream_repo: "https://github.com/Vendicated/Vencord.git"
+          upstream_branch: "main"
+          downstream_branch: "main-vencord"
           token: ${{ secrets.GITHUB_TOKEN }}
