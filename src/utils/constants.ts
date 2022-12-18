@@ -177,4 +177,12 @@ export const Devs = Object.freeze({
         name: "'ax",
         id: 273562710745284628n,
     },
+    HypedDomi: {
+        name: "HypedDomi",
+        id: 354191516979429376n,
+    },
+    RadNotRed: {
+        name: "RadNotRed",
+        id: 113027285765885952n,
+    },
 });

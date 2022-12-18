@@ -119,10 +119,13 @@
         },
         "PlatformIndicators": {
             "enabled": true,
-            "displayMode": "both"
+            "displayMode": "both",
+            "chat": true,
+            "list": true,
+            "badges": true
         },
         "PronounDB": {
-            "enabled": false,
+            "enabled": true,
             "pronounsFormat": "CAPITALIZED",
             "showSelf": true
         },
