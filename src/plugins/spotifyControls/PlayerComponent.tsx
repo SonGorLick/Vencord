@@ -253,6 +253,54 @@ function Info({ track }: { track: Track; }) {
     if (coverExpanded && img) return (
         <div id={cl("album-expanded-wrapper")}>
             {i}
+            <div id={cl("titles")}>
+                <Forms.FormText
+                    variant="text-sm/semibold"
+                    id={cl("song-title")}
+                    className={cl("ellipoverflow")}
+                    role={track.id ? "link" : undefined}
+                    title={track.name}
+                    onClick={track.id ? () => {
+                        SpotifyStore.openExternal(`/track/${track.id}`);
+                    } : void 0}
+                >
+                    {track.name}
+                </Forms.FormText>
+                {track.artists.some(a => a.name) && (
+                    <Forms.FormText variant="text-sm/normal" className={cl("ellipoverflow")}>
+                        by&nbsp;
+                        {track.artists.map((a, i) => (
+                            <React.Fragment key={a.name}>
+                                <Link
+                                    className={cl("artist")}
+                                    disabled={!a.id}
+                                    href={`https://open.spotify.com/artist/${a.id}`}
+                                    style={{ fontSize: "inherit" }}
+                                    title={a.name}
+                                >
+                                    {a.name}
+                                </Link>
+                                {i !== track.artists.length - 1 && <span className={cl("comma")}>{", "}</span>}
+                            </React.Fragment>
+                        ))}
+                    </Forms.FormText>
+                )}
+                {track.album.name && (
+                    <Forms.FormText variant="text-sm/normal" className={cl("ellipoverflow")}>
+                        on&nbsp;
+                        <Link id={cl("album-title")}
+                            href={`https://open.spotify.com/album/${track.album.id}`}
+                            target="_blank"
+                            className={cl("album")}
+                            disabled={!track.album.id}
+                            style={{ fontSize: "inherit" }}
+                            title={track.album.name}
+                        >
+                            {track.album.name}
+                        </Link>
+                    </Forms.FormText>
+                )}
+            </div>
         </div>
     );
 

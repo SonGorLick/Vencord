@@ -547,15 +547,3 @@
   width: 2px;
   border-radius: 6px;
 }
-
-#vc-spotify-progress-bar .barFill-2Bh7CX {
-    background: var(--spotify);
-}
-
-#vc-spotify-album-image, .assetsLargeImageSpotify-17ME3M {
-  border-radius: 8px !important;
-}
-
-#vc-spotify-album-image {
-  border-radius: 16px;
-}
