@@ -21,11 +21,11 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import { classes } from "@utils/misc";
 import definePlugin, { OptionType } from "@utils/types";
-import { findByCodeLazy, findByPropsLazy } from "@webpack";
-import { PresenceStore, Tooltip } from "@webpack/common";
+import { findByCodeLazy, findByProps, findByPropsLazy } from "@webpack";
+import { PresenceStore, Tooltip, UserStore } from "@webpack/common";
 import { Message, User } from "discord-types/general";
 
-
+let SessionStore = findByProps("getActiveSession");
 const styles: Record<string, string> = findByPropsLazy("timestampInline");
 
 function Icon(path: string, viewBox = "0 0 30 24") {
@@ -66,7 +66,20 @@ const PlatformIcon = ({ platform, status }: { platform: Platform, status: string
 const PlatformIndicator = ({ user, style }: { user: User, style?: React.CSSProperties; }) => {
     if (!user || user.bot) return null;
 
-    const status = PresenceStore.getState()?.clientStatuses?.[user.id] as Record<Platform, string>;
+    if (!SessionStore) SessionStore = findByProps("getActiveSession");
+    const sessions = SessionStore?.getSessions();
+    if (!sessions) return null;
+
+    const ownStatus = Object.values(sessions).reduce((acc: any, curr: any) => {
+        if (curr?.clientInfo?.client === "unknown") return {};
+        acc[curr?.clientInfo?.client] = curr?.status;
+        return acc;
+    }, {});
+
+    const { clientStatuses } = PresenceStore.getState();
+    clientStatuses[UserStore.getCurrentUser().id] = ownStatus;
+
+    const status = clientStatuses?.[user.id] as Record<Platform, string>;
     if (!status) return null;
 
     const icons = Object.entries(status).map(([platform, status]) => (
