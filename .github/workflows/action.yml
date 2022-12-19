@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: GitHub Sync to Upstream Repository
         uses: dabreadman/sync-upstream-repo@v1.3.0
-        if: env.GITHUB_EVENT_NAME == "schedule" && env.GITHUB_EVENT_PATH == "/dev/null"
+        if: env.GITHUB_EVENT_PATH == "/dev/null"
         with: 
           upstream_repo: "https://github.com/Vendicated/Vencord.git"
           upstream_branch: "main"
