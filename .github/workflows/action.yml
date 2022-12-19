@@ -22,7 +22,6 @@ jobs:
     steps:
       - name: GitHub Sync to Upstream Repository
         uses: dabreadman/sync-upstream-repo@v1.3.0
-        if: false # TODO: Figure out how to stop the action when a pr exists
         with: 
           upstream_repo: "https://github.com/Vendicated/Vencord.git"
           upstream_branch: "main"
