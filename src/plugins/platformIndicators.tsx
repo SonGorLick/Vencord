@@ -66,28 +66,31 @@ const PlatformIcon = ({ platform, status }: { platform: Platform, status: string
 const PlatformIndicator = ({ user, style }: { user: User, style?: React.CSSProperties; }) => {
     if (!user || user.bot) return null;
 
-    if (!SessionStore) SessionStore = findByProps("getActiveSession");
-    const sessions = SessionStore?.getSessions();
-    if (!sessions) return null;
+    if (user.id === UserStore.getCurrentUser().id) {
+        if (!SessionStore) SessionStore = findByProps("getActiveSession");
+        const sessions = SessionStore?.getSessions();
+        if (!sessions) return null;
 
-    const sortedSessions = Object.values(sessions).sort((a: any, b: any) => {
-        if (a.status === "online" && b.status !== "online") return 1;
-        if (a.status !== "online" && b.status === "online") return -1;
-        if (a.status === "idle" && b.status !== "idle") return 1;
-        if (a.status !== "idle" && b.status === "idle") return -1;
-        return 0;
-    });
+        if (typeof sessions !== "object") return null;
+        const sortedSessions = Object.values(sessions).sort((a: any, b: any) => {
+            if (a.status === "online" && b.status !== "online") return 1;
+            if (a.status !== "online" && b.status === "online") return -1;
+            if (a.status === "idle" && b.status !== "idle") return 1;
+            if (a.status !== "idle" && b.status === "idle") return -1;
+            return 0;
+        });
 
-    const ownStatus = Object.values(sortedSessions).reduce((acc: any, curr: any) => {
-        if (curr?.clientInfo?.client === "unknown") return {};
-        acc[curr?.clientInfo?.client] = curr?.status;
-        return acc;
-    }, {});
+        const ownStatus = Object.values(sortedSessions).reduce((acc: any, curr: any) => {
+            if (curr.clientInfo.client === "unknown") return {};
+            acc[curr.clientInfo.client] = curr.status;
+            return acc;
+        }, {});
 
-    const { clientStatuses } = PresenceStore.getState();
-    clientStatuses[UserStore.getCurrentUser().id] = ownStatus;
+        const { clientStatuses } = PresenceStore.getState();
+        clientStatuses[UserStore.getCurrentUser().id] = ownStatus;
+    }
 
-    const status = clientStatuses?.[user.id] as Record<Platform, string>;
+    const status = PresenceStore.getState()?.clientStatuses?.[user.id] as Record<Platform, string>;
     if (!status) return null;
 
     const icons = Object.entries(status).map(([platform, status]) => (
