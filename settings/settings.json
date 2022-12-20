@@ -150,7 +150,8 @@
             "showDates": false
         },
         "SpotifyControls": {
-            "enabled": true
+            "enabled": true,
+            "hoverControls": true
         },
         "SpotifyCrack": {
             "enabled": false
