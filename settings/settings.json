@@ -119,10 +119,9 @@
         },
         "PlatformIndicators": {
             "enabled": true,
-            "displayMode": "both",
-            "chat": true,
             "list": true,
-            "badges": true
+            "badges": true,
+            "messages": true
         },
         "PronounDB": {
             "enabled": true,
@@ -279,6 +278,18 @@
         },
         "NoTrack": {
             "enabled": true
+        },
+        "MessageDecorationsAPI": {
+            "enabled": true
+        },
+        "MemberListDecoratorsAPI": {
+            "enabled": true
+        },
+        "DisableDMCallIdle": {
+            "enabled": false
+        },
+        "NoScreensharePreview": {
+            "enabled": false
         }
     }
 }

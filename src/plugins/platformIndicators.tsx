@@ -16,19 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { addBadge, BadgePosition, ProfileBadge, removeBadge } from "@api/Badges";
+import { addDecorator, removeDecorator } from "@api/MemberListDecorators";
+import { addDecoration, removeDecoration } from "@api/MessageDecorations";
 import { Settings } from "@api/settings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
-import { classes } from "@utils/misc";
 import definePlugin, { OptionType } from "@utils/types";
-import { findByCodeLazy, findByProps, findByPropsLazy } from "@webpack";
+import { findByCodeLazy, findByPropsLazy } from "@webpack";
 import { PresenceStore, Tooltip, UserStore } from "@webpack/common";
-import { Message, User } from "discord-types/general";
+import { User } from "discord-types/general";
 
-let SessionStore = findByProps("getActiveSession");
-const styles: Record<string, string> = findByPropsLazy("timestampInline");
+const SessionStore = findByPropsLazy("getActiveSession");
 
-function Icon(path: string, viewBox = "0 0 30 24") {
+function Icon(path: string, viewBox = "0 0 24 24") {
     return ({ color, tooltip }: { color: string; tooltip: string; }) => (
         <Tooltip text={tooltip} >
             {(tooltipProps: any) => (
@@ -38,6 +39,7 @@ function Icon(path: string, viewBox = "0 0 30 24") {
                     width="18"
                     viewBox={viewBox}
                     fill={color}
+                    transform="scale(.75)"
                 >
                     <path d={path} />
                 </svg>
@@ -63,26 +65,26 @@ const PlatformIcon = ({ platform, status }: { platform: Platform, status: string
     return <Icon color={`var(--${getStatusColor(status)}`} tooltip={tooltip} />;
 };
 
-const PlatformIndicator = ({ user, style }: { user: User, style?: React.CSSProperties; }) => {
+const getStatus = (id: string): Record<Platform, string> => PresenceStore.getState()?.clientStatuses?.[id];
+
+const PlatformIndicator = ({ user, style, inline = false }: { user: User, style?: React.CSSProperties; inline?: boolean; }) => {
     if (!user || user.bot) return null;
 
     if (user.id === UserStore.getCurrentUser().id) {
-        if (!SessionStore) SessionStore = findByProps("getActiveSession");
-        const sessions = SessionStore?.getSessions();
-        if (!sessions) return null;
-
+        const sessions = SessionStore.getSessions();
         if (typeof sessions !== "object") return null;
-        const sortedSessions = Object.values(sessions).sort((a: any, b: any) => {
-            if (a.status === "online" && b.status !== "online") return 1;
-            if (a.status !== "online" && b.status === "online") return -1;
-            if (a.status === "idle" && b.status !== "idle") return 1;
-            if (a.status !== "idle" && b.status === "idle") return -1;
+        const sortedSessions = Object.values(sessions).sort(({ status: a }: any, { status: b }: any) => {
+            if (a === b) return 0;
+            if (a === "online") return 1;
+            if (b === "online") return -1;
+            if (a === "idle") return 1;
+            if (b === "idle") return -1;
             return 0;
         });
 
         const ownStatus = Object.values(sortedSessions).reduce((acc: any, curr: any) => {
-            if (curr.clientInfo.client === "unknown") return {};
-            acc[curr.clientInfo.client] = curr.status;
+            if (curr.clientInfo.client !== "unknown")
+                acc[curr.clientInfo.client] = curr.status;
             return acc;
         }, {});
 
@@ -90,7 +92,7 @@ const PlatformIndicator = ({ user, style }: { user: User, style?: React.CSSPrope
         clientStatuses[UserStore.getCurrentUser().id] = ownStatus;
     }
 
-    const status = PresenceStore.getState()?.clientStatuses?.[user.id] as Record<Platform, string>;
+    const status = getStatus(user.id);
     if (!status) return null;
 
     const icons = Object.entries(status).map(([platform, status]) => (
@@ -107,7 +109,11 @@ const PlatformIndicator = ({ user, style }: { user: User, style?: React.CSSPrope
         <div
             className="vc-platform-indicator"
             style={{
-                ...style, display: "flex", alignItems: "center", marginLeft: "4px", gap: "-8px"
+                ...style,
+                marginLeft: "2px",
+                alignItems: "center",
+                display: inline ? "inline-flex" : "flex",
+                transform: inline ? "translateY(4px)" : undefined
             }}
         >
             {icons}
@@ -115,85 +121,70 @@ const PlatformIndicator = ({ user, style }: { user: User, style?: React.CSSPrope
     );
 };
 
+const badge: ProfileBadge = {
+    component: p => <PlatformIndicator {...p} />,
+    position: BadgePosition.START,
+    shouldShow: userInfo => !!Object.keys(getStatus(userInfo.user.id) ?? {}).length,
+    key: "indicator"
+};
+
+const indicatorLocations = {
+    list: {
+        description: "In the member list",
+        onEnable: () => addDecorator("platform-indicator", props =>
+            <ErrorBoundary noop>
+                <PlatformIndicator user={props.user} />
+            </ErrorBoundary>
+        ),
+        onDisable: () => removeDecorator("platform-indicator")
+    },
+    badges: {
+        description: "In user profiles, as badges",
+        onEnable: () => addBadge(badge),
+        onDisable: () => removeBadge(badge)
+    },
+    messages: {
+        description: "Inside messages",
+        onEnable: () => addDecoration("platform-indicator", props =>
+            <ErrorBoundary noop>
+                <PlatformIndicator user={
+                    props.decorations[1]?.find(i => i.key === "new-member")?.props.message?.author
+                } inline />
+            </ErrorBoundary>
+        ),
+        onDisable: () => removeDecoration("platform-indicator")
+    }
+};
+
 export default definePlugin({
     name: "PlatformIndicators",
     description: "Adds platform indicators (Desktop, Mobile, Web...) to users",
-    authors: [Devs.kemo, Devs.HypedDomi, Devs.RadNotRed],
+    authors: [Devs.kemo, Devs.TheSun, Devs.RadNotRed, Devs.HypedDomi],
+    dependencies: ["MessageDecorationsAPI", "MemberListDecoratorsAPI"],
 
-    patches: [
-        {
-            // Chat decorators
-            find: "showCommunicationDisabledStyles",
-            predicate: () => Settings.plugins.PlatformIndicators.chat,
-            replacement: {
-                match: /(?<=return\s*\(0,\w{1,3}\.jsxs?\)\(.+!\w{1,3}&&)(\(0,\w{1,3}.jsxs?\)\(.+?\{.+?\}\))/,
-                replace: "[$1, Vencord.Plugins.plugins.PlatformIndicators.ChatTimestampWrapper(e)]"
-            }
-        },
-        {
-            // Server member list decorators
-            find: "this.renderPremium()",
-            predicate: () => Settings.plugins.PlatformIndicators.list,
-            replacement: {
-                match: /this.renderPremium\(\)[^\]]*?\]/,
-                replace: "$&.concat(Vencord.Plugins.plugins.PlatformIndicators.renderPlatformIndicators(this.props))"
-            }
-        },
-        {
-            // Dm list decorators
-            find: "PrivateChannel.renderAvatar",
-            predicate: () => Settings.plugins.PlatformIndicators.list,
-            replacement: {
-                match: /(subText:(.{1,3})\..+?decorators:)(.+?:null)/,
-                replace: "$1[$3].concat(Vencord.Plugins.plugins.PlatformIndicators.renderPlatformIndicators($2.props))"
-            }
-        },
-        {
-            // User badges
-            find: "Messages.PROFILE_USER_BADGES",
-            predicate: () => Settings.plugins.PlatformIndicators.badges,
-            replacement: {
-                match: /(Messages\.PROFILE_USER_BADGES,role:"group",children:)(.+?\.key\)\}\)\))/,
-                replace: "$1[Vencord.Plugins.plugins.PlatformIndicators.renderPlatformIndicators(e)].concat($2)"
-            }
-        }
-    ],
-
-    ChatTimestampWrapper({ message }: { message: Message; }) {
-        return (
-            <span className={classes(styles.timestampInline, styles.timestamp, "vc-platform-indicator-chat")}>
-                <PlatformIndicator user={message.author} style={{ position: "relative", top: "4.5px", marginLeft: "2px" }} />
-            </span>
-        );
+    start() {
+        const settings = Settings.plugins.PlatformIndicators;
+        Object.entries(indicatorLocations).forEach(([key, value]) => {
+            if (settings[key]) value.onEnable();
+        });
     },
 
-    renderPlatformIndicators: ({ user }: { user: User; }) => (
-        <ErrorBoundary noop>
-            <PlatformIndicator user={user} />
-        </ErrorBoundary>
-    ),
+    stop() {
+        Object.entries(indicatorLocations).forEach(([_, value]) => {
+            value.onDisable();
+        });
+    },
 
     options: {
-        chat: {
-            type: OptionType.BOOLEAN,
-            description: "Show platform indicators in chat (Breaks PronounDBs chat patch)",
-            restartNeeded: true,
-            value: "chat",
-            default: true
-        },
-        badges: {
-            type: OptionType.BOOLEAN,
-            description: "Show platform indicators in user badges",
-            restartNeeded: true,
-            value: "badges",
-            default: true
-        },
-        list: {
-            type: OptionType.BOOLEAN,
-            description: "Show platform indicators in member list",
-            restartNeeded: true,
-            value: "list",
-            default: true
-        },
+        ...Object.fromEntries(
+            Object.entries(indicatorLocations).map(([key, value]) => {
+                return [key, {
+                    type: OptionType.BOOLEAN,
+                    description: `Show indicators ${value.description.toLowerCase()}`,
+                    restartNeeded: true,
+                    default: true
+                }];
+            })
+        )
     }
 });
