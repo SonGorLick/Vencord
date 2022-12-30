@@ -290,6 +290,9 @@
         },
         "NoScreensharePreview": {
             "enabled": false
+        },
+        "GlobalBadges": {
+            "enabled": true
         }
     }
 }
