@@ -146,7 +146,7 @@
         },
         "SortFriendRequests": {
             "enabled": true,
-            "showDates": false
+            "showDates": true
         },
         "SpotifyControls": {
             "enabled": true,
@@ -286,10 +286,10 @@
             "enabled": true
         },
         "DisableDMCallIdle": {
-            "enabled": false
+            "enabled": true
         },
         "NoScreensharePreview": {
-            "enabled": false
+            "enabled": true
         },
         "GlobalBadges": {
             "enabled": true
