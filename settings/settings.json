@@ -56,7 +56,7 @@
         },
         "Experiments": {
             "enabled": true,
-            "enableIsStaff": false
+            "enableIsStaff": true
         },
         "FakeNitro": {
             "enabled": false
@@ -293,6 +293,9 @@
         },
         "GlobalBadges": {
             "enabled": true
+        },
+        "InvisibleChat": {
+            "enabled": false
         }
     }
 }
