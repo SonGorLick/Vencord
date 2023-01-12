@@ -29,9 +29,9 @@ import { Message } from "discord-types/general";
 
 const CopyIcon = () => {
     return (
-        <svg width="24" height="24" viewBox="0 0 24 24">
+        <svg className="vcn-copy-raw-icon" width="24" height="24" viewBox="0 0 24 24">
             <path
-                fill="#347dfa"
+                fill="currentColor"
                 d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
             />
         </svg>
@@ -119,6 +119,12 @@ function openViewRawModal(msg: Message) {
     ));
 }
 
+function addStyles() {
+    const style = document.createElement("style");
+    style.id = "vc-copy-raw-styles";
+    style.innerHTML = ".button-3bklZh:hover > .vcn-copy-raw-icon path { fill: #347dfa }";
+    document.head.appendChild(style);
+}
 export default definePlugin({
     name: "ViewRaw",
     description: "Copy and view the raw content/data of any message.",
@@ -126,6 +132,7 @@ export default definePlugin({
     dependencies: ["MessagePopoverAPI"],
 
     start() {
+        addStyles();
         addButton("ViewRaw", msg => {
             return {
                 label: "Copy Raw (Left Click) / View Raw (Right Click)",
