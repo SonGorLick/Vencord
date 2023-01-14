@@ -296,6 +296,10 @@
         },
         "InvisibleChat": {
             "enabled": false
+        },
+        "AlwaysTrust": {
+            "enabled": false
         }
-    }
+    },
+    "frameless": false
 }

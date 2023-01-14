@@ -38,6 +38,10 @@ function VencordSettings() {
 
     const donateImage = React.useMemo(() => Math.random() > 0.5 ? DEFAULT_DONATE_IMAGE : SHIGGY_DONATE_IMAGE, []);
 
+    VencordNative.ipc.invoke(IpcEvents.SETTINGS_IN_APPDATA).then(v => {
+        settings.settingsInAppdata = v[0];
+    });
+
     return (
         <React.Fragment>
             <DonateCard image={donateImage} />
@@ -111,6 +115,16 @@ function VencordSettings() {
                             onChange={(v: boolean) => settings.frameless = v}
                             note="Requires a full restart">
                             Disable the window frame
+                        </Switch>
+                        <Switch
+                            value={settings.settingsInAppData}
+                            disabled={settings.settingsInAppdata === null}
+                            onChange={(v: boolean) => {
+                                settings.settingsInAppData = v;
+                                VencordNative.ipc.invoke(IpcEvents.SET_SETTINGS_DIR, v);
+                            }}
+                            note="Requires a full restart">
+                            Store settings in AppData instead of project directory
                         </Switch>
                     </React.Fragment>
                 )}

@@ -23,13 +23,13 @@ import { debounce } from "@utils/debounce";
 import IpcEvents from "@utils/IpcEvents";
 import { Queue } from "@utils/Queue";
 import { BrowserWindow, ipcMain, shell } from "electron";
-import { mkdirSync, readFileSync, watch } from "fs";
+import { mkdirSync, readFileSync, unlinkSync, watch, writeFileSync } from "fs";
 import { open, readFile, writeFile } from "fs/promises";
 import { join } from "path";
 
 import monacoHtml from "~fileContent/../components/monacoWin.html;base64";
 
-import { ALLOWED_PROTOCOLS, QUICKCSS_PATH, SETTINGS_DIR, SETTINGS_FILE } from "./constants";
+import { ALLOWED_PROTOCOLS, APPDATA_FOLDER_VENCORD, QUICKCSS_PATH, SETTINGS_DIR, SETTINGS_FILE, SETTINGS_IN_APPDATA } from "./constants";
 
 mkdirSync(SETTINGS_DIR, { recursive: true });
 
@@ -74,6 +74,10 @@ ipcMain.handle(IpcEvents.SET_SETTINGS, (_, s) => {
     settingsWriteQueue.push(() => writeFile(SETTINGS_FILE, s));
 });
 
+ipcMain.handle(IpcEvents.SETTINGS_IN_APPDATA, () => SETTINGS_IN_APPDATA);
+ipcMain.handle(IpcEvents.SET_SETTINGS_DIR, (_, v) => {
+    v ? writeFileSync(join(APPDATA_FOLDER_VENCORD, ".use"), "") : unlinkSync(join(APPDATA_FOLDER_VENCORD, ".use"));
+});
 
 export function initIpc(mainWindow: BrowserWindow) {
     open(QUICKCSS_PATH, "a+").then(fd => {

@@ -34,6 +34,8 @@ export default strEnum({
     GET_QUICK_CSS: "VencordGetQuickCss",
     SET_QUICK_CSS: "VencordSetQuickCss",
     GET_SETTINGS_DIR: "VencordGetSettingsDir",
+    SET_SETTINGS_DIR: "VencordSetSettingsDir",
+    SETTINGS_IN_APPDATA: "VencordSettingsInAppdata",
     GET_SETTINGS: "VencordGetSettings",
     SET_SETTINGS: "VencordSetSettings",
     OPEN_EXTERNAL: "VencordOpenExternal",
