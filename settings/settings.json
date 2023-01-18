@@ -153,7 +153,9 @@
             "hoverControls": true
         },
         "SpotifyCrack": {
-            "enabled": false
+            "enabled": true,
+            "noSpotifyAutoPause": true,
+            "keepSpotifyActivityOnIdle": true
         },
         "StartupTimings": {
             "enabled": false
