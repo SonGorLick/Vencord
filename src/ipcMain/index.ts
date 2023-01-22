@@ -82,7 +82,7 @@ ipcMain.handle(IpcEvents.SET_SETTINGS_DIR, (_, v) => {
 export function initIpc(mainWindow: BrowserWindow) {
     open(QUICKCSS_PATH, "a+").then(fd => {
         fd.close();
-        watch(QUICKCSS_PATH, debounce(async () => {
+        watch(QUICKCSS_PATH, { persistent: false }, debounce(async () => {
             mainWindow.webContents.postMessage(IpcEvents.QUICK_CSS_UPDATE, await readCss());
         }, 50));
     });
