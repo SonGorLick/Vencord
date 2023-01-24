@@ -112,6 +112,15 @@ function VencordSettings() {
                         >
                             Disable the window frame
                         </Switch>
+                        {navigator.platform.toLowerCase().startsWith("win") && (
+                            <Switch
+                                value={settings.winCtrlQ}
+                                onChange={(v: boolean) => settings.winCtrlQ = v}
+                                note="Requires a full restart"
+                            >
+                                Register Ctrl+Q as shortcut to close Discord (Alternative to Alt+F4)
+                            </Switch>
+                        )}
                         <Switch
                             value={settings.settingsInAppData}
                             disabled={settings.settingsInAppdata === null}
@@ -122,15 +131,6 @@ function VencordSettings() {
                             note="Requires a full restart">
                             Store settings in AppData instead of project directory
                         </Switch>
-                        {navigator.platform.toLowerCase().startsWith("win") && (
-                            <Switch
-                                value={settings.winCtrlQ}
-                                onChange={(v: boolean) => settings.winCtrlQ = v}
-                                note="Requires a full restart"
-                            >
-                                Register Ctrl+Q as shortcut to close Discord (Alternative to Alt+F4)
-                            </Switch>
-                        )}
                     </React.Fragment>
                 )}
 
