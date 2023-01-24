@@ -101,19 +101,15 @@ function VencordSettings() {
                         <Switch
                             value={settings.enableReactDevtools}
                             onChange={(v: boolean) => settings.enableReactDevtools = v}
-                            note="Requires a full restart">
+                            note="Requires a full restart"
+                        >
                             Enable React Developer Tools
-                        </Switch>
-                        <Switch
-                            value={settings.notifyAboutUpdates}
-                            onChange={(v: boolean) => settings.notifyAboutUpdates = v}
-                            note="Shows a toast on startup">
-                            Get notified about new updates
                         </Switch>
                         <Switch
                             value={settings.frameless}
                             onChange={(v: boolean) => settings.frameless = v}
-                            note="Requires a full restart">
+                            note="Requires a full restart"
+                        >
                             Disable the window frame
                         </Switch>
                         <Switch
@@ -126,6 +122,15 @@ function VencordSettings() {
                             note="Requires a full restart">
                             Store settings in AppData instead of project directory
                         </Switch>
+                        {navigator.platform.toLowerCase().startsWith("win") && (
+                            <Switch
+                                value={settings.winCtrlQ}
+                                onChange={(v: boolean) => settings.winCtrlQ = v}
+                                note="Requires a full restart"
+                            >
+                                Register Ctrl+Q as shortcut to close Discord (Alternative to Alt+F4)
+                            </Switch>
+                        )}
                     </React.Fragment>
                 )}
 

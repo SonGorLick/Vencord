@@ -139,7 +139,8 @@
         },
         "ShowHiddenChannels": {
             "enabled": true,
-            "hideUnreads": true
+            "hideUnreads": true,
+            "showMode": 0
         },
         "SilentTyping": {
             "enabled": false
@@ -303,7 +304,13 @@
         },
         "AlwaysTrust": {
             "enabled": false
+        },
+        "CustomRPC": {
+            "enabled": false
         }
     },
-    "frameless": false
+    "frameless": false,
+    "autoUpdate": false,
+    "winCtrlQ": false,
+    "settingsInAppData": false
 }
