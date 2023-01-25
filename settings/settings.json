@@ -140,7 +140,7 @@
         "ShowHiddenChannels": {
             "enabled": true,
             "hideUnreads": true,
-            "showMode": 0
+            "showMode": 1
         },
         "SilentTyping": {
             "enabled": false
@@ -306,6 +306,9 @@
             "enabled": false
         },
         "CustomRPC": {
+            "enabled": false
+        },
+        "VcNarrator": {
             "enabled": false
         }
     },
