@@ -313,7 +313,7 @@
         }
     },
     "frameless": false,
-    "autoUpdate": false,
+    "autoUpdate": true,
     "winCtrlQ": false,
     "settingsInAppData": false
 }
