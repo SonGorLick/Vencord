@@ -112,6 +112,13 @@ function VencordSettings() {
                         >
                             Disable the window frame
                         </Switch>
+                        <Switch
+                            value={settings.transparent}
+                            onChange={(v: boolean) => settings.transparent = v}
+                            note="Requires a full restart"
+                        >
+                            Enable window transparency
+                        </Switch>
                         {navigator.platform.toLowerCase().startsWith("win") && (
                             <Switch
                                 value={settings.winCtrlQ}
