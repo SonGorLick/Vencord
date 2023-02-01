@@ -135,7 +135,11 @@
             "enabled": false
         },
         "ShikiCodeblocks": {
-            "enabled": false
+            "enabled": true,
+            "theme": "https://raw.githubusercontent.com/shikijs/shiki/0b28ad8ccfbf2615f2d9d38ea8255416b8ac3043/packages/shiki/themes/github-dark-dimmed.json",
+            "tryHljs": "SECONDARY",
+            "useDevIcon": "GREYSCALE",
+            "bgOpacity": 100
         },
         "ShowHiddenChannels": {
             "enabled": true,
@@ -310,10 +314,15 @@
         },
         "VcNarrator": {
             "enabled": false
+        },
+        "TypingTweaks": {
+            "enabled": true,
+            "alternativeFormatting": true
         }
     },
     "frameless": false,
     "autoUpdate": true,
     "winCtrlQ": false,
-    "settingsInAppData": false
+    "settingsInAppData": false,
+    "transparent": false
 }
