@@ -10,8 +10,10 @@
   box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.45);
 }
 
-.theme-dark .container-YkUktl, .container-1zzFcN, .theme-dark .panel-2ZFCRb {
-  background-color: transparent;
+.theme-dark .container-YkUktl,
+.container-1zzFcN,
+.theme-dark .panel-2ZFCRb {
+  background-color: transparent !important;
 }
 
 .panels-3wFtMD .container-YkUktl .flex-2S1XBF {
