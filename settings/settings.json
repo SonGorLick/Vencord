@@ -318,11 +318,34 @@
         "TypingTweaks": {
             "enabled": true,
             "alternativeFormatting": true
+        },
+        "ColorSighted": {
+            "enabled": false
+        },
+        "RevealAllSpoilers": {
+            "enabled": false
+        },
+        "richerCider": {
+            "enabled": false
+        },
+        "RoleColorEverywhere": {
+            "enabled": true,
+            "chatMentions": true,
+            "memberList": false,
+            "voiceUsers": true
+        },
+        "TypingIndicator": {
+            "enabled": false
         }
     },
     "frameless": false,
     "autoUpdate": true,
     "winCtrlQ": false,
     "settingsInAppData": false,
-    "transparent": false
+    "transparent": false,
+    "notifications": {
+        "timeout": 5000,
+        "position": "bottom-right",
+        "useNative": "never"
+    }
 }
