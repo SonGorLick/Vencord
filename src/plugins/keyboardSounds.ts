@@ -17,7 +17,7 @@
 */
 
 import { Devs } from "@utils/constants";
-import definePlugin from "@utils/types";
+import definePlugin, { OptionType } from "@utils/types";
 
 const sounds = {
     click1: new Audio("https://github.com/HypedDomi/Vencord-Plugins/raw/main/Keyboard-Sounds/sounds/click1.wav"),
@@ -32,14 +32,13 @@ const keydown = (e: KeyboardEvent) => {
     if (ignoredKeys.includes(e.code)) return;
     for (const sound of Object.values(sounds)) sound.pause();
     if (e.code === "Backspace") {
-        const backspace = sounds.backspace;
-        backspace.currentTime = 0;
-        backspace.play();
-        return;
+        sounds.backspace.currentTime = 0;
+        sounds.backspace.play();
+    } else {
+        const click = sounds[`click${Math.floor(Math.random() * 3) + 1}`];
+        click.currentTime = 0;
+        click.play();
     }
-    const click = sounds[`click${Math.floor(Math.random() * 3) + 1}`];
-    click.currentTime = 0;
-    click.play();
 };
 
 export default definePlugin({
@@ -47,5 +46,15 @@ export default definePlugin({
     description: "Adds the Opera GX Keyboard Sounds to Discord",
     authors: [Devs.HypedDomi],
     start: () => document.addEventListener("keydown", keydown),
-    stop: () => document.removeEventListener("keydown", keydown)
+    stop: () => document.removeEventListener("keydown", keydown),
+    options: {
+        volume: {
+            description: "Volume of the sounds",
+            type: OptionType.SLIDER,
+            markers: [0, 100],
+            stickToMarkers: false,
+            default: 100,
+            onChange: (value) => { for (const sound of Object.values(sounds)) sound.volume = value / 100; }
+        }
+    }
 });
