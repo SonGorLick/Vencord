@@ -336,6 +336,9 @@
         },
         "TypingIndicator": {
             "enabled": false
+        },
+        "Keyboard Sounds": {
+            "enabled": true
         }
     },
     "frameless": false,
